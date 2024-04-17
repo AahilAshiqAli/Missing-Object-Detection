@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}User Dashboard |{% endblock title %}
+{% block body %}
+
+<div class = "container my-5 mx-0 d-flex">
+    <style>
+        .custom-btn {
+            background-color: white; /* Change the background color to green */
+            border : none;
+        }
+    </style>
+    
+    <div class="col-md-3 justify-content-center">
+        <button type="button" class="btn btn-primary custom-btn m-5 p-2" data-bs-toggle="modal" data-bs-target="#uploadModal">
+            <div class="d-flex justify-content-center align-items-center"> <!-- Center the image -->
+                <img src="static/logo/add.png" class="w-50 h-auto" alt="Add Icon"> 
+            </div>
+        </button>
+        <h5 class="p-2 bd-highlight text-center display-5">
+            Add new items
+        </h5>
+
+        <!--
+            Starting here from file
+        -->
+        <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="uploadModalLabel">Upload or Browse Files</h5>
+                  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <!-- Form for file upload -->
+                  <form action="/dashboard" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <label for="file-upload" class="form-label">Upload file</label>
+                      <input type="file" class="form-control" id="file-upload" name="file">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+        <!--
+            Ending here from file
+        -->
+    </div>
+    <div class="container col-md-10">
+        <div class="row">
+        {% for i in data%}
+        <div class="col-md-4">
+            <div class="card mt-5 shadow-sm">
+            <a href = "{% url 'details' i.name %}"><img src = "{% static 'logo/' %}{{ i.name }}.png" class = "d-block w-100"></a>
+                <div class="card-body">
+                <div class="d-flex flex-row bd-highlight mb-3 justify-content-center">
+                    <h5 class="p-2 bd-highlight text-center font-weight-bold display-4">
+                        {{i.name}}
+                    </h5>
+                </div>
+            </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+
+{% endblock body %}
