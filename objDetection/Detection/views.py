@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, logout, login
 from email_validator import validate_email,EmailNotValidError
 import requests
-
+from django.conf import settings
+from .models import Object
+from .forms import MyModelForm
 
 # Create your views here.
 def index(request):
@@ -105,11 +107,11 @@ def user_dashboard(request):
         try:
             uploaded_file = request.POST['file']
             filepath = "static/pictures/" + uploaded_file.name
-            with open(filepath, 'wb+') as destination:
-                for chunk in uploaded_file.chunks():
-                    destination.write(chunk)
+            form = MyModelForm(request.POST, request.FILES)
+            messages.success(request,'File uploaded')
         except Exception as e:
             print(e)
+            messages.error(request, "Error uploading file: {}".format(e))
     else:
         print("No file")
     return render(request, "userhome.html", q)
