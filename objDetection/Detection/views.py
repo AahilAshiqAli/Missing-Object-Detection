@@ -104,11 +104,7 @@ def user_dashboard(request):
         q['user'] = True
         q['username'] = request.user.username
     l = request.user.reverse_relationship.all()
-    q['data'] = []
-    for i in l:
-        image_location = i.image_location
-        dictionary = {"path" : image_location, "name" : os.path.basename(i.image_location.name.split('.')[0])}
-        q['data'].append(dictionary)
+
     
     if request.method == 'POST' and 'file' in request.FILES.keys():
         try:
@@ -121,6 +117,12 @@ def user_dashboard(request):
             messages.error(request, "Error uploading file: {}".format(e),extra_tags='danger')
     else:
         print("No file")
+        
+    q['data'] = []
+    for i in l:
+        image_location = i.image_location
+        dictionary = {"path" : image_location, "name" : os.path.basename(i.image_location.name.split('.')[0])}
+        q['data'].append(dictionary)
     return render(request, "userhome.html", q)
     
 def details(request,name):
@@ -130,4 +132,24 @@ def details(request,name):
     else:
         q['user'] = True
         q['username'] = request.user.username
+        
+    if request.method == 'POST' and 'file' in request.FILES.keys():
+        try:
+            uploaded_file = request.FILES['file']
+            handle_uploaded_file(uploaded_file)
+            # here call that file
+            messages.success(request,'File uploaded')
+        except Exception as e:
+            print(e)
+            messages.error(request, "Error uploading file: {}".format(e),extra_tags='danger')
+    else:
+        print("No file")
+        
     return render(request,"details.html")
+
+
+
+def handle_uploaded_file(f):
+    with open("content/images.jpg", "wb+") as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
