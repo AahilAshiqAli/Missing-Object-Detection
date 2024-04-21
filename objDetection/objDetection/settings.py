@@ -86,7 +86,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'Detection.User'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -122,12 +122,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = BASE_DIR / 'static/'
+STATIC_URL = 'static/'
+
+MEDIA_URL = 'media/'
 
 STATICFILES_DIRS = [
-    STATIC_URL,
+    BASE_DIR / STATIC_URL
 ]
 
+MEDIA_ROOT = BASE_DIR / MEDIA_URL
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

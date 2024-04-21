@@ -1,6 +1,8 @@
 from django.urls import path
 from django.contrib import admin
 from Detection import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 admin.site.site_header = "Elite Estate Royce | Admin"
 admin.site.site_title = "Admin Portal"
@@ -13,4 +15,4 @@ urlpatterns = [
     path('logout',views.logoutUser,name = 'logout'),
     path('dashboard',views.user_dashboard,name = "dashboard"),
     path('details/<str:name>/',views.details,name = "details")
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

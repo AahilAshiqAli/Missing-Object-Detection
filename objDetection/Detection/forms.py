@@ -4,7 +4,7 @@ from .models import Object
 class MyModelForm(forms.ModelForm):
     class Meta:
         model = Object
-        fields = ['user', 'image_location']
+        fields = ['image_location']
         
         
 """

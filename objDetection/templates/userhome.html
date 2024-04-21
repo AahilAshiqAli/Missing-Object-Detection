@@ -52,15 +52,24 @@
           </div>
         
         <!--
-            Ending here from file
+            Ending here from file.........not able to serve png.........plus would have to use api for resizing images
         -->
     </div>
+    <style>
+    .image-container{
+      height: 200px;
+      width : auto;
+    }
+    </style>
     <div class="container col-md-10">
         <div class="row">
         {% for i in data%}
         <div class="col-md-4">
             <div class="card mt-5 shadow-sm">
-            <a href = "{% url 'details' i.name %}"><img src = "{% static 'logo/' %}{{ i.name }}.png" class = "d-block w-100"></a>
+            <a href = "{% url 'details' i.name %}">
+              <div class = "image-container">
+                  <img src= "{{i.path.url}}" class = "d-block w-100"></a>
+              </div>
                 <div class="card-body">
                 <div class="d-flex flex-row bd-highlight mb-3 justify-content-center">
                     <h5 class="p-2 bd-highlight text-center font-weight-bold display-4">

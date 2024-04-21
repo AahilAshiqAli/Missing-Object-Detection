@@ -8,6 +8,8 @@ import requests
 from django.conf import settings
 from .models import Object
 from .forms import MyModelForm
+import os
+
 
 # Create your views here.
 def index(request):
@@ -101,17 +103,22 @@ def user_dashboard(request):
     else:
         q['user'] = True
         q['username'] = request.user.username
-    q['data'] = [{'name' : 'key'}, {'name' : 'key'}, {'name' : 'key'}, {'name' : 'key'}, {'name' : 'key'}, {'name' : 'key'}] 
+    l = request.user.reverse_relationship.all()
+    q['data'] = []
+    for i in l:
+        image_location = i.image_location
+        dictionary = {"path" : image_location, "name" : os.path.basename(i.image_location.name.split('.')[0])}
+        q['data'].append(dictionary)
     
-    if request.method == 'POST' and 'file' in request.POST.keys():
+    if request.method == 'POST' and 'file' in request.FILES.keys():
         try:
-            uploaded_file = request.POST['file']
-            filepath = "static/pictures/" + uploaded_file.name
-            form = MyModelForm(request.POST, request.FILES)
+            uploaded_file = request.FILES['file']
+            obj = Object(image_location = uploaded_file,user = request.user)
+            obj.save()        
             messages.success(request,'File uploaded')
         except Exception as e:
             print(e)
-            messages.error(request, "Error uploading file: {}".format(e))
+            messages.error(request, "Error uploading file: {}".format(e),extra_tags='danger')
     else:
         print("No file")
     return render(request, "userhome.html", q)
