@@ -3,7 +3,7 @@
 {% block title %}User Dashboard |{% endblock title %}
 {% block body %}
 
-<div class = "container my-5 mx-0 d-flex">
+<div class = "container my-5 mx-0 d-flex justify-content-between">
     <style>
         .custom-btn {
             background-color: white; /* Change the background color to green */
@@ -20,41 +20,83 @@
         <h5 class="p-2 bd-highlight text-center display-5">
             Add new items
         </h5>
-
         <!--
             Starting here from file
         -->
         <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="uploadModalLabel">Upload or Browse Files</h5>
-                  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <!-- Form for file upload -->
-                  <form action="/dashboard" method="POST" enctype="multipart/form-data">
+          <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="uploadForm" action="/dashboard" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="mb-3">
-                      <label for="file-upload" class="form-label">Upload file</label>
-                      <input type="file" class="form-control" id="file-upload" name="file">
+        
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadModalLabel">Choose Object</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <button type="submit" class="btn btn-primary">Upload</button>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-              </div>
+        
+                    <div class="scrolling-container" style="height: 400px; overflow-y: auto;">
+                        <div class="row">
+                            {% for key, image in images %}
+                            <div class="col-6 col-sm-4 col-md-3 mb-3">
+                              
+                                <label class="image-radio-label">
+                                    <input type="radio" name="radio" value="{{ key }}" class="image-radio" required>
+                                    <img src="{{ image }}" alt="Selectable" class="img-fluid img-thumbnail">
+                                    <h5 class = "text-center">{{key}}</h5>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+        
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadModalLabel">Upload or Browse Files</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+        
+                    <div class="modal-body">
+                        <!-- Form for file upload -->
+                        <div class="mb-3">
+                            <label for="file-upload" class="form-label">Upload file</label>
+                            <input type="file" class="form-control" id="file-upload" name="file">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </form>
             </div>
-          </div>
+        </div>
+        
+        <script>
+            document.getElementById("uploadForm").addEventListener("submit", function (event) {
+                // Check if a radio button is selected
+                const radioButtons = document.querySelectorAll('input[type="radio"]');
+                let radioButtonChecked = false;
+                radioButtons.forEach(function (button) {
+                    if (button.checked) {
+                        radioButtonChecked = true;
+                    }
+                });
+        
+                // Check if a file is selected
+                const fileInput = document.getElementById('file-upload');
+                if (!radioButtonChecked || !fileInput.files.length) {
+                    alert("Please choose an object and upload a file.");
+                    event.preventDefault(); // Prevent form submission
+                }
+            });
+        </script>
+        
+      </div>
+      
+    </div>
         
         <!--
             Ending here from file.........not able to serve png.........plus would have to use api for resizing images
         -->
-    </div>
     <style>
     .image-container{
       height: 200px;
@@ -66,7 +108,7 @@
         {% for i in data%}
         <div class="col-md-4">
             <div class="card mt-5 shadow-sm">
-            <a href = "{% url 'details' i.name %}">
+            <a href = "{% url 'details_withname' i.name %}">
               <div class = "image-container">
                   <img src= "{{i.path.url}}" class = "d-block w-100"></a>
               </div>
@@ -82,5 +124,5 @@
         {% endfor %}
         </div>
     </div>
-
+  </div>
 {% endblock body %}

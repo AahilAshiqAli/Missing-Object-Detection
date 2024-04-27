@@ -68,12 +68,14 @@ def detect_objects(image_name, desired_class=None, confidence_threshold=0.2, nms
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+    label11 = []
     # Print the detected objects
     for idx, (class_id, confidence, bbox) in enumerate(detections, start=1):
         class_label = class_labels[class_id]
+        label11.append(class_label)
         print(f"Object {idx}: {class_label} (confidence: {confidence:.2f})")
 
-    return detections, save_path
+    return label11, save_path
 
 # Example usage:
 # detect_objects("example.jpg", desired_class="keys")

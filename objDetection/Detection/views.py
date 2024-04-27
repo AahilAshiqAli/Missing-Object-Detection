@@ -10,9 +10,9 @@ from .models import Object
 from .forms import MyModelForm
 import os
 from .far.untitled5 import detect_objects
+from .data_module import dictionary
 
-objects = None
-
+global prev_name
 
 # Create your views here.
 def index(request):
@@ -109,12 +109,20 @@ def user_dashboard(request):
     l = request.user.reverse_relationship.all()
 
     
-    if request.method == 'POST' and 'file' in request.FILES.keys():
+    if request.method == 'POST' and 'file' in request.FILES.keys() and 'radio' in request.POST.keys(): 
         try:
             uploaded_file = request.FILES['file']
-            obj = Object(image_location = uploaded_file,user = request.user)
-            obj.save()        
-            messages.success(request,'File uploaded')
+            handle_uploaded_file(uploaded_file)
+            print("Hello i am here")
+            detections, processed_image_path = detect_objects(uploaded_file.name)
+            if request.POST['radio'] in detections:    
+                uploaded_file.name = request.POST['radio']
+                obj = Object(image_location = uploaded_file,user = request.user)
+                obj.save()        
+                messages.success(request,'File uploaded')
+            else:
+                print(detections)
+                messages.error(request,"System bias",extra_tags='danger')
         except Exception as e:
             print(e)
             messages.error(request, "Error uploading file: {}".format(e),extra_tags='danger')
@@ -122,14 +130,15 @@ def user_dashboard(request):
         print("No file")
         
     q['data'] = []
-    q['images'] = []
+    q['images'] = dictionary.items()
     for i in l:
         image_location = i.image_location
-        dictionary = {"path" : image_location, "name" : os.path.basename(i.image_location.name.split('.')[0])}
-        q['data'].append(dictionary)
+        dictionary1 = {"path" : image_location, "name" : os.path.basename(i.image_location.name.split('.')[0])}
+        q['data'].append(dictionary1)
     return render(request, "userhome.html", q)
     
-def details(request,name = None):
+def details(request,name=None):
+    global prev_name
     q={}
     print("details function")
     if request.user.is_anonymous:
@@ -138,12 +147,17 @@ def details(request,name = None):
         q['user'] = True
         q['username'] = request.user.username
         
+    if name is None:
+        name = prev_name
+    else:
+        prev_name = name
     if request.method == 'POST' and 'file' in request.FILES.keys():
         try:
+            print(name)
             uploaded_file = request.FILES['file']
             handle_uploaded_file(uploaded_file)
             print("Hello i am here")
-            detections, processed_image_path = detect_objects(uploaded_file.name)
+            detections, processed_image_path = detect_objects(uploaded_file.name,name)
             print("Hello I am there")
             q['detections'] = detections
             q['processed_image_path'] = processed_image_path
@@ -163,3 +177,12 @@ def handle_uploaded_file(f):
     with open(file, "wb+") as destination:
         for chunk in f.chunks():
             destination.write(chunk)
+
+def document(request):
+    q = {}
+    if request.user.is_anonymous:
+        q['user'] = False
+    else:
+        q['user'] = True
+        q['username'] = request.user.username
+    return render(request,'documentation.html',q)

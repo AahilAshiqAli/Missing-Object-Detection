@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Help Page |{% endblock title %}
+{% block body %}
+
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <h1 class="display-4">Help Page</h1>
+    </header>
+    <nav class="mb-4">
+        <ul class="nav nav-pills justify-content-center">
+            <li class="nav-item"><a class="nav-link" href="#overview">Overview</a></li>
+            <li class="nav-item"><a class="nav-link" href="#navigation">Navigation</a></li>
+            <li class="nav-item"><a class="nav-link" href="#object-detection-configuration">Object Detection Configuration</a></li>
+            <li class="nav-item"><a class="nav-link" href="#object-detection-page">Object Detection Page</a></li>
+        </ul>
+    </nav>
+    <section id="overview" class="feature-divider">
+        <h2 class="mb-3" style="color: #007bff;">Overview</h2>
+        <p>The Missing Object Detection project utilizes advanced YOLO (You Only Look Once) image localization technology to accurately detect missing objects within confined spaces, such as rooms. Unlike traditional Bluetooth trackers, which cover larger areas but may lack efficiency in detecting objects, our solution excels in small spaces, providing precise localization.</p>
+    </section>
+    <hr class="featurette-divider py-2">
+    <section id="navigation" class="feature-divider">
+        <h2 class="mb-3" style="color: #28a745;">Navigation</h2>
+        <p>Efficiently navigate through the help page using the menu or search feature. The page is designed for intuitive browsing, ensuring easy access to relevant information.</p>
+    </section>
+    <hr class="featurette-divider py-2">
+    <section id="object-detection-configuration" class="feature-divider">
+        <h2 class="mb-3" style="color: #dc3545;">Object Detection Configuration</h2>
+        <div class = "container py-3 px-5">
+        <h4 style="color: #ffc107;">Why Configure Object Detection?</h3>
+        <p>Configuring object detection helps our system learn how to recognize specific objects accurately. By providing clear images of objects we want to detect, we help the system improve its ability to identify those objects in various scenarios.</p>
+        <hr class="featurette-divider py-2">
+        <h4 style="color: #17a2b8;">How to Configure Object Detection?</h3>
+        <ol>
+            <li><strong>Select Object Tag:</strong> Start by choosing the tag or label that corresponds to the object you want to detect. For example, if you're configuring detection for a key, select the "key" tag.</li>
+            <li><strong>Upload Clear Picture:</strong> Once you've selected the tag, upload a clear picture of the object. Make sure the object is well-lit and clearly visible in the image.</li>
+        </ol>
+        <hr class="featurette-divider py-2">
+        <h4 style="color: #6610f2;">Purpose of Configuration:</h3>
+        <ul>
+            <li><strong>Validation:</strong> After uploading the picture, our system will attempt to detect the specified object in the image. This step helps us verify if the system can accurately identify the object. If the system successfully detects the object in the clear image, it indicates that the detection process is working effectively.</li>
+            <li><strong>Bias Identification:</strong> By analyzing the system's performance during object detection, we can identify any potential biases or limitations. For example, the system may perform better with certain objects compared to others. Understanding these biases helps us refine the detection algorithm and improve overall accuracy.</li>
+        </ul>
+        </div>
+    </section>
+    <hr class="featurette-divider py-2">
+    <section id="object-detection-page" class="feature-divider">
+        <h2 class="mb-3" style="color: #6610f2;">Object Detection Page</h2>
+        <p>Upload a room picture for object detection. The system will identify the specified object and display a bounding box. Room images are not saved for privacy.</p>
+    </section>
+</div>
+<hr class="featurette-divider py-2">
+<hr class="featurette-divider py-2">
+
+{% endblock body %}
