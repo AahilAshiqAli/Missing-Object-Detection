@@ -9,6 +9,9 @@ from django.conf import settings
 from .models import Object
 from .forms import MyModelForm
 import os
+from .far.untitled5 import detect_objects
+
+objects = None
 
 
 # Create your views here.
@@ -119,14 +122,16 @@ def user_dashboard(request):
         print("No file")
         
     q['data'] = []
+    q['images'] = []
     for i in l:
         image_location = i.image_location
         dictionary = {"path" : image_location, "name" : os.path.basename(i.image_location.name.split('.')[0])}
         q['data'].append(dictionary)
     return render(request, "userhome.html", q)
     
-def details(request,name):
+def details(request,name = None):
     q={}
+    print("details function")
     if request.user.is_anonymous:
         return redirect("/login")
     else:
@@ -137,7 +142,11 @@ def details(request,name):
         try:
             uploaded_file = request.FILES['file']
             handle_uploaded_file(uploaded_file)
-            # here call that file
+            print("Hello i am here")
+            detections, processed_image_path = detect_objects(uploaded_file.name)
+            print("Hello I am there")
+            q['detections'] = detections
+            q['processed_image_path'] = processed_image_path
             messages.success(request,'File uploaded')
         except Exception as e:
             print(e)
@@ -145,11 +154,12 @@ def details(request,name):
     else:
         print("No file")
         
-    return render(request,"details.html")
+    return render(request,"details.html",q)
 
 
 
 def handle_uploaded_file(f):
-    with open("content/images.jpg", "wb+") as destination:
+    file = "Detection/far/" + f.name
+    with open(file, "wb+") as destination:
         for chunk in f.chunks():
             destination.write(chunk)

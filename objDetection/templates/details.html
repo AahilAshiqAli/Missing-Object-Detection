@@ -35,7 +35,7 @@
                 </div>
                 <div class="modal-body">
                   <!-- Form for file upload -->
-                  <form action="/dashboard" method="POST" enctype="multipart/form-data">
+                  <form action="/details" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                       <label for="file-upload" class="form-label">Upload file</label>
@@ -52,10 +52,10 @@
           </div>
 
 
-          <div class = "container my-5 mx-0 d-flex justify-content-between">
+          <div class = "container md-5 my-5 mx-0 d-flex justify-content-between">
             <div class="col-md-8">
                 <div class="card shadow-sm">
-                  <img src = "{% '/content/images.jpg' %}" class = "d-block w-100">
+                  <img src = "{{processed_image_path }}" class = "d-block w-100">
                 </div>
             </div>        
 {% endblock body %}
